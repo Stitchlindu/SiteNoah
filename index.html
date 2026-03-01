@@ -10,66 +10,64 @@
 <body>
 
 <div class="container">
-<div class="slides-container">
+  <div class="slides-container">
 
-<div class="slide active">
-<div class="card">
-<h1>Vamos embarcar na Arca do Noah! 🚢</h1>
-<p>O Noah está completando seu 2º aninho!</p>
-<div class="date">09 de maio</div>
-<button onclick="nextSlide()">Próximo →</button>
-</div>
-</div>
+    <div class="slide active">
+      <div class="card">
+        <h1>Vamos embarcar na Arca do Noah! 🚢</h1>
+        <p>O Noah está completando seu 2º aninho!</p>
+        <div class="date">09 de maio</div>
+        <button onclick="nextSlide()">Próximo →</button>
+      </div>
+    </div>
 
-<div class="slide">
-<div class="card">
-<p>O Noah vai completar seu segundo aninho e essa arca só fica completa com pessoas especiais como você ❤️</p>
-<button onclick="nextSlide()">Próximo →</button>
-</div>
-</div>
+    <div class="slide">
+      <div class="card">
+        <p>O Noah vai completar seu segundo aninho e essa arca só fica completa com pessoas especiais como você ❤️</p>
+        <button onclick="nextSlide()">Próximo →</button>
+      </div>
+    </div>
 
-<div class="slide">
-<div class="card purple">
-<h2>Confirme sua presença</h2>
-<input type="text" id="guestName" placeholder="Digite seu nome">
-<button class="accept" onclick="confirmPresence(true)">🦁 Estaremos a bordo!</button>
-<button class="decline" onclick="confirmPresence(false)">🐘 Não poderemos embarcar</button>
-</div>
-</div>
+    <div class="slide">
+      <div class="card purple">
+        <h2>Confirme sua presença</h2>
+        <input type="text" id="guestName" placeholder="Digite seu nome">
+        <button class="accept" onclick="confirmPresence(true)">🦁 Estaremos a bordo!</button>
+        <button class="decline" onclick="confirmPresence(false)">🐘 Não poderemos embarcar</button>
+      </div>
+    </div>
 
-<div class="slide">
-  <div class="card">
-    <p><strong>🎂 Aniversariante:</strong> Noah</p>
-    <p><strong>🎉 Idade:</strong> 2 anos</p>
-    <p><strong>📅 Data:</strong> 09 de maio</p>
-    <p><strong>⏰ Horário:</strong> A partir das 16:00</p>
+    <div class="slide">
+      <div class="card">
+        <p><strong>🎂 Aniversariante:</strong> Noah</p>
+        <p><strong>🎉 Idade:</strong> 2 anos</p>
+        <p><strong>📅 Data:</strong> 09 de maio</p>
+        <p><strong>⏰ Horário:</strong> A partir das 16:00</p>
 
-    <p><strong>📍 Local:</strong></p>
-    <p id="addressText">R. São Sebastião, 986 - Jarinu/SP</p>
+        <p><strong>📍 Local:</strong></p>
+        <p id="addressText">R. São Sebastião, 986 - Jarinu/SP</p>
 
-    <button onclick="copyAddress()">📋 Copiar endereço</button>
-    <button onclick="openMaps()">🗺️ Abrir no Maps</button>
+        <button onclick="copyAddress()">📋 Copiar endereço</button>
+        <button onclick="openMaps()">🗺️ Abrir rota no Maps</button>
 
-    <button onclick="nextSlide()">Próximo →</button>
+        <button onclick="nextSlide()">Próximo →</button>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="card pink">
+        <h2>Esperamos você! 🎉</h2>
+      </div>
+    </div>
+
   </div>
-</div>
-</div>
-
-<div class="slide">
-<div class="card pink">
-<h2>Esperamos você! 🎉</h2>
-
-</div>
-</div>
-
-</div>
 </div>
 
 <!-- PAINEL ADMIN -->
 <div id="adminPanel" class="admin-panel">
-<h2>Painel do Administrador</h2>
-<div id="adminList"></div>
-<button onclick="clearList()">Limpar Lista</button>
+  <h2>Painel do Administrador</h2>
+  <div id="adminList"></div>
+  <button onclick="clearList()">Limpar Lista</button>
 </div>
 
 <script type="module" src="script.js"></script>
