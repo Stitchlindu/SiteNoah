@@ -25,25 +25,35 @@ const db = getFirestore(app);
 let slides;
 let currentSlide = 0;
 
+/* ============================= */
+/*        INICIALIZAÇÃO          */
+/* ============================= */
+
 document.addEventListener("DOMContentLoaded", async function(){
 
   slides = document.querySelectorAll(".slide");
 
-  // 🔐 PRIMEIRO verifica se é admin
+  // 🔐 ADMIN sempre entra
   if(window.location.hash === "#admin"){
     await openAdmin();
     return;
   }
 
-  // 🔒 DEPOIS verifica se já respondeu
   const resposta = localStorage.getItem("respostaEnviada");
 
-  if(resposta){
+  // 🔓 Se respondeu que VAI, abre direto no endereço
+  if(resposta === "vai"){
+    showSlide(3);
+    return;
+  }
+
+  // 🔒 Se respondeu que NÃO vai, bloqueia
+  if(resposta === "nao"){
     document.body.innerHTML = `
       <div style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:Poppins;text-align:center;">
         <div>
           <h2>Resposta já enviada ✅</h2>
-          <p>Obrigado pela confirmação!</p>
+          <p>Obrigado por avisar!</p>
         </div>
       </div>
     `;
@@ -95,12 +105,19 @@ async function confirmPresence(isComing){
     data: new Date().toLocaleString()
   });
 
-  localStorage.setItem("respostaEnviada", "true");
-
   if(isComing){
+
+    // 🔓 Libera para entrar novamente
+    localStorage.setItem("respostaEnviada", "vai");
+
     alert("🎉 Presença confirmada!");
     showSlide(3);
+
   } else {
+
+    // 🔒 Bloqueia se não vai
+    localStorage.setItem("respostaEnviada", "nao");
+
     document.body.innerHTML = `
       <div style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:Poppins;text-align:center;">
         <div>
