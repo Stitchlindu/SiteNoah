@@ -10,7 +10,7 @@ import {
 
 /* ===== CONFIG FIREBASE ===== */
 const firebaseConfig = {
-  apiKey: "AIzaSyDbu0VGJKFA5GF0_I-_r5YxYs80yjzVWMc",
+  apiKey: "SUA_API_KEY",
   authDomain: "convite-noah.firebaseapp.com",
   projectId: "convite-noah",
   storageBucket: "convite-noah.firebasestorage.app",
@@ -25,9 +25,17 @@ const db = getFirestore(app);
 let slides;
 let currentSlide = 0;
 
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded", async function(){
 
-  // 🔒 VERIFICA SE JÁ RESPONDEU NO NAVEGADOR
+  slides = document.querySelectorAll(".slide");
+
+  // 🔐 PRIMEIRO verifica se é admin
+  if(window.location.hash === "#admin"){
+    await openAdmin();
+    return;
+  }
+
+  // 🔒 DEPOIS verifica se já respondeu
   const resposta = localStorage.getItem("respostaEnviada");
 
   if(resposta){
@@ -42,13 +50,7 @@ document.addEventListener("DOMContentLoaded", function(){
     return;
   }
 
-  slides = document.querySelectorAll(".slide");
   showSlide(0);
-
-  if(window.location.hash === "#admin"){
-    openAdmin();
-  }
-
 });
 
 /* ============================= */
@@ -93,7 +95,6 @@ async function confirmPresence(isComing){
     data: new Date().toLocaleString()
   });
 
-  // 🔒 BLOQUEIA NO NAVEGADOR
   localStorage.setItem("respostaEnviada", "true");
 
   if(isComing){
@@ -149,6 +150,7 @@ async function clearList(){
 }
 
 async function openAdmin(){
+
   let senha = prompt("Digite a senha do administrador:");
 
   if(senha==="noah2026"){
