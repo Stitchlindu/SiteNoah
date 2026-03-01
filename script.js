@@ -181,3 +181,30 @@ async function openAdmin(){
 
 window.openAdmin = openAdmin;
 window.clearList = clearList;
+
+/* ============================= */
+/*        ENDEREÇO FUNÇÕES       */
+/* ============================= */
+
+function copyAddress(){
+
+  const address = document.getElementById("addressText").innerText;
+
+  navigator.clipboard.writeText(address)
+    .then(() => {
+      alert("Endereço copiado! 📋");
+    })
+    .catch(() => {
+      alert("Não foi possível copiar automaticamente.");
+    });
+}
+
+function openMaps(){
+  // URL direta do Google Maps para Chácara Da Felicidade
+  const url = "https://www.google.com/maps/place/Chacar%C3%A1+Da+Felicidade/@-23.1297238,-46.7346928,17z/data=!4m15!1m8!3m7!1s0x94cedbce9fad8649:0x9899d892ddbe879f!2sR.+S%C3%A3o+Sebasti%C3%A3o,+986+-+Aglomera%C3%A7%C3%A3o+Urbana+de+Jundia%C3%AD,+Jarinu+-+SP,+13240-000!3b1!8m2!3d-23.1297238!4d-46.7346928!16s%2Fg%2F11vql7qj5l!3m5!1s0x94cedb007ddabb03:0x27c11288b800df99!8m2!3d-23.1301795!4d-46.7345624!16s%2Fg%2F11y955xxsh?entry=ttu&g_ep=EgoyMDI2MDIyNS4wIKXMDSoASAFQAw%3D%3D";
+
+  window.open(url, "_blank");
+}
+
+window.copyAddress = copyAddress;
+window.openMaps = openMaps;
