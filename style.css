@@ -1,102 +1,185 @@
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { 
+  getFirestore, 
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+/* FIREBASE */
+const firebaseConfig = {
+  apiKey: "SUA_KEY",
+  authDomain: "convite-noah.firebaseapp.com",
+  projectId: "convite-noah",
+  storageBucket: "convite-noah.firebasestorage.app",
+  messagingSenderId: "829535421891",
+  appId: "1:829535421891:web:57463ce4d5c35824e82976"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let slides;
+let currentSlide = 0;
+
+document.addEventListener("DOMContentLoaded", async function(){
+
+  slides = document.querySelectorAll(".slide");
+
+  document.getElementById("adminPanel").style.display = "none";
+
+  if(window.location.hash === "#admin"){
+    await openAdmin();
+    return;
+  }
+
+  const resposta = localStorage.getItem("respostaConfirmada");
+
+  if(resposta === "nao"){
+    document.body.innerHTML = `
+      <div style="display:flex;justify-content:center;align-items:center;height:100vh;text-align:center;color:white;">
+        <div>
+          <h2>😊 Você já informou que não poderá ir</h2>
+          <p>Obrigado pelo retorno!</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  if(resposta === "vai"){
+    showSlide(3);
+    return;
+  }
+
+  showSlide(0);
+});
+
+/* SLIDES */
+function showSlide(index){
+  slides.forEach(s => s.classList.remove("active"));
+  slides[index].classList.add("active");
+  currentSlide = index;
 }
 
-body{
-font-family:'Poppins',sans-serif;
-background:linear-gradient(180deg,#87CEEB,#B2E8D8);
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+function nextSlide(){
+  if(currentSlide < slides.length-1){
+    showSlide(currentSlide+1);
+  }
 }
 
-.container{
-width:100%;
-max-width:400px;
+window.nextSlide = nextSlide;
+
+/* CONFIRMAR */
+async function confirmPresence(isComing){
+
+  let name = document.getElementById("guestName").value.trim();
+
+  if(!name){
+    alert("Digite seu nome 😊");
+    return;
+  }
+
+  if(localStorage.getItem("respostaConfirmada")){
+    <div style="display:flex;justify-content:center;align-items:center;height:400vh;text-align:center;color:white;"></div>
+    alert("Você já respondeu 😊");
+    return;
+  }
+
+  try{
+    await addDoc(collection(db,"confirmacoes"),{
+      nome: name,
+      status: isComing ? "Vai" : "Não vai",
+      data: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("respostaConfirmada", isComing ? "vai" : "nao");
+
+    alert("Resposta salva 🎉");
+
+  }catch(e){
+    alert("Erro ao salvar 😢");
+    console.error(e);
+  }
+
+  if(isComing){
+    showSlide(3);
+  }else{
+    document.body.innerHTML = `
+      <div style="display:flex;justify-content:center;align-items:center;height:400vh;text-align:center;color:white;">
+        <div>
+          <h2>😊 Tudo bem!</h2>
+          <p>Obrigado por avisar.</p>
+        </div>
+      </div>
+    `;
+  }
 }
 
-.slide{
-display:none;
+window.confirmPresence = confirmPresence;
+
+/* ADMIN */
+async function openAdmin(){
+
+  let senha = prompt("Senha do admin:");
+
+  if(senha==="noah2026"){
+
+    document.querySelector(".container").style.display="none";
+    document.getElementById("adminPanel").style.display="block";
+
+    await loadAdminList();
+
+  }else{
+    alert("Senha incorreta!");
+  }
 }
 
-.slide.active{
-display:block;
+async function loadAdminList(){
+  const querySnapshot = await getDocs(collection(db,"confirmacoes"));
+
+  let html="";
+  querySnapshot.forEach(doc=>{
+    let p = doc.data();
+    html += `<p><strong>${p.nome}</strong> - ${p.status}</p>`;
+  });
+
+  document.getElementById("adminList").innerHTML =
+    html || "Nenhuma confirmação ainda.";
 }
 
-.card{
-background:white;
-padding:30px;
-border-radius:20px;
-box-shadow:0 15px 40px rgba(0,0,0,0.2);
-text-align:center;
-display:flex;
-flex-direction:column;
-gap:15px;
+async function clearList(){
+
+  const confirmar = confirm("Apagar tudo?");
+  if(!confirmar) return;
+
+  const querySnapshot = await getDocs(collection(db,"confirmacoes"));
+  const promises = [];
+
+  querySnapshot.forEach(docItem=>{
+    promises.push(deleteDoc(doc(db,"confirmacoes", docItem.id)));
+  });
+
+  await Promise.all(promises);
+
+  alert("Lista apagada!");
+  loadAdminList();
 }
 
-.purple{
-background:#E8D5F2;
-}
+window.openAdmin = openAdmin;
+window.clearList = clearList;
 
-.pink{
-background:#F0E6F5;
-}
+/* ENDEREÇO */
+window.copyAddress = () => {
+  let txt = document.getElementById("addressText").innerText;
+  navigator.clipboard.writeText(txt);
+  alert("Copiado!");
+};
 
-.date{
-background:#fff;
-padding:10px;
-border-radius:20px;
-font-weight:bold;
-}
-
-button{
-padding:12px;
-border:none;
-border-radius:10px;
-cursor:pointer;
-font-weight:600;
-}
-
-.accept{
-background:#B2E8D8;
-}
-
-.decline{
-background:#E0E0E0;
-}
-
-button:hover{
-opacity:0.85;
-}
-
-input{
-padding:12px;
-border-radius:10px;
-border:1px solid #ccc;
-}
-
-.admin-panel{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:white;
-padding:40px;
-overflow:auto;
-z-index:999;
-}
-
-.admin-panel h2{
-margin-bottom:20px;
-}
-
-.admin-panel button{
-margin-top:20px;
-background:#e53935;
-color:white;
-}
+window.openMaps = () => {
+  let address = document.getElementById("addressText").innerText;
+  let url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+  window.open(url, "_blank");
+};
